@@ -1,9 +1,9 @@
 fileFormatVersion: 2
-guid: 6d5be8e50921c394e97e6de2b4037c11
+guid: bf9a663a1640efd4ab743e885de0641a
 MonoImporter:
   serializedVersion: 2
   defaultReferences:
-  - spawnableEnemy: {fileID: 139902, guid: 444ffb0b3a3007546aba495fab176ea6, type: 2}
+  - nextBackground: {fileID: 164554, guid: da8602fe49564ab4c9d677ce8a000a7f, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

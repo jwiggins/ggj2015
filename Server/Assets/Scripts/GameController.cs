@@ -8,6 +8,12 @@ public class GameController : MonoBehaviour {
 	bool playerExists;
 	GameObject playerObject;
 	public GameObject playerPrefab;
+
+	List<Enemy> enemies = new List<Enemy> ();
+
+	List<Spawner> spawners;
+	public GameObject spawnerPrefab;
+
 	//NetworkThingy networker;
 
 	static bool _spawningIsEnabled = true;
@@ -23,6 +29,24 @@ public class GameController : MonoBehaviour {
 		//networker = gameObject.GetComponent<NetworkThingy>()
 		playerObject = (GameObject) Instantiate(playerPrefab, new Vector3 (-7.5f, 4f), Quaternion.identity);
 		allMobiles.Add (playerObject);
+		spawners = new List<Spawner> ();
+		for (int i = 0; i <= 8; i++) {
+			GameObject newSpawner = (GameObject) Instantiate(spawnerPrefab, new Vector2 (11, 4 - i), 
+			                                                 Quaternion.identity);
+			Spawner sScript = newSpawner.GetComponent<Spawner>();
+			spawners.Add(sScript);
+			sScript.spawnerIndex = i;
+		}
+		foreach (Object i in  Resources.LoadAll ("Enemies")) {
+			GameObject enemyPrefab = (GameObject) i;
+			Enemy enemy = enemyPrefab.GetComponent<Enemy>();
+			enemies.Add(enemy);
+			foreach (Spawner j in spawners) {
+				if (enemy.getAvailableSpawners().Contains(j.spawnerIndex)){
+					j.SetSpawnableEnemy(enemy);
+				}
+			}
+		}
 	}
 
 	// Use this for initialization

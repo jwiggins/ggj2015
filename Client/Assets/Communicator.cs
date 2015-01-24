@@ -13,8 +13,8 @@ public class Communicator : MonoBehaviour {
         if (Network.peerType == NetworkPeerType.Disconnected)
         {
             GUI.Label(new Rect(10, 10, 300, 20), "Status: Disconnected");
-            connectionIP = GUI.TextField(new Rect(10, 30, 300, 20), connectionIP);
-            if (GUI.Button(new Rect(10, 50, 120, 20), "Client Connect"))
+            connectionIP = GUI.TextField(new Rect(10, 30, 300, 50), connectionIP);
+            if (GUI.Button(new Rect(10, 100, 120, 50), "Client Connect"))
             {
                 Network.Connect(connectionIP, connectionPort);
             }
@@ -22,11 +22,11 @@ public class Communicator : MonoBehaviour {
         else if (Network.peerType == NetworkPeerType.Client)
         {
             GUI.Label(new Rect(10, 10, 300, 20), "Status: Connected as Client");
-            if (GUI.Button(new Rect(10, 30, 120, 20), "Disconnect"))
+            if (GUI.Button(new Rect(10, 30, 120, 50), "Disconnect"))
             {
                 Network.Disconnect(200);
             }
-			if (GUI.Button(new Rect(10, 50, 120, 20), "Attack!"))
+			if (GUI.Button(new Rect(10, 90, 120, 50), "Attack!"))
 			{
 				networkView.RPC("RecvClientEvent", RPCMode.Server, attackType);
 			}

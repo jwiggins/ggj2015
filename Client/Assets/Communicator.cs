@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NetworkSetup : MonoBehaviour {
- 
-    public string connectionIP;
+public class Communicator : MonoBehaviour {
+
     public int connectionPort = 25001;
- 
+
+	string connectionIP = "";
+	string attackType;
+
     void OnGUI()
     {
         if (Network.peerType == NetworkPeerType.Disconnected)
@@ -24,6 +26,23 @@ public class NetworkSetup : MonoBehaviour {
             {
                 Network.Disconnect(200);
             }
-        }
+			if (GUI.Button(new Rect(10, 50, 120, 20), "Attack!"))
+			{
+				networkView.RPC("RecvClientEvent", RPCMode.Server, attackType);
+			}
+		}
     }
+
+	[RPC]
+	void AssignClientAttack(string attack)
+	{
+		attackType = attack;
+		Debug.Log("My attack is:" + attack);
+	}
+
+	[RPC]
+	void RecvClientEvent(string attack)
+	{
+		// Empty. Implemented on the server.
+	}
 }

@@ -5,6 +5,7 @@ public class StartServing : MonoBehaviour {
 
     public int connectionPort = 25001;
     public string connectedAddr;
+    public string clientText;
 
     void OnPlayerConnected(NetworkPlayer player)
     {
@@ -27,10 +28,18 @@ public class StartServing : MonoBehaviour {
             GUI.Label(new Rect(10, 10, 300, 20), "Status: Connected as Server");
             GUI.Label(new Rect(10, 30, 300, 20), ipAddr);
             GUI.Label(new Rect(10, 50, 300, 20), "client: " + connectedAddr);
-            if (GUI.Button(new Rect(10, 70, 120, 20), "Disconnect"))
+            GUI.Label(new Rect(10, 70, 300, 20), "client msg: " + clientText);
+            if (GUI.Button(new Rect(10, 90, 120, 20), "Disconnect"))
             {
                 Network.Disconnect(200);
             }
         }
     }
+
+    [RPC]
+    void RecvClientMessage(string msg)
+    {
+        clientText = msg;
+    }
+
 }

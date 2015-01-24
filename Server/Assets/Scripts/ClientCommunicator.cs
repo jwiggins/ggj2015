@@ -5,11 +5,23 @@ using System.Collections.Generic;
 public class ClientCommunicator : MonoBehaviour {
 	
 	public int connectionPort = 25001;
-	public List<string> connectedAddrs;
+
+	Dictionary<string, string> connectedAddrs;
+	List<string> unusedAttacks;
+	List<string> loadedAttacks;
 
 	// Use this for initialization
 	void Start () {
 		Network.InitializeServer(32, connectionPort, false);
+
+		connectedAddrs = new Dictionary<string, string>();
+		unusedAttacks = new List<string>();
+		loadedAttacks = new List<string>();
+
+		unusedAttacks.Add("Fire");
+		unusedAttacks.Add("Wind");
+		unusedAttacks.Add("Water");
+		unusedAttacks.Add("Marmot");
 	}
 
 	void OnGUI()
@@ -23,31 +35,47 @@ public class ClientCommunicator : MonoBehaviour {
 			string ipAddr = Network.player.ipAddress;
 			GUI.Label(new Rect(10, 10, 300, 20), "Status: Connected as Server");
 			GUI.Label(new Rect(10, 30, 300, 20), ipAddr);
-			if (GUI.Button(new Rect(10, 50, 120, 20), "Disconnect"))
-			{
-				Network.Disconnect(200);
-			}
 			string allClients = "Clients: ";
-			foreach (string playerIp in connectedAddrs)
+			foreach (string playerIp in connectedAddrs.Keys)
 			{
 				allClients = allClients + playerIp;
 			}
-			GUI.Label(new Rect(10, 70, 300, 20), allClients);
+			GUI.Label(new Rect(10, 50, 300, 20), allClients);
 		}
 	}
 	
 	void OnPlayerConnected(NetworkPlayer player)
 	{
-		connectedAddrs.Add(player.ipAddress);
+		int index = (int) Random.value * unusedAttacks.Count;
+		string attack = unusedAttacks[index];
+
+		loadedAttacks.Add(attack);
+		unusedAttacks.RemoveAt(index);
+		connectedAddrs.Add(player.ipAddress, attack);
+
+		networkView.RPC("AssignClientAttack", player, attack);
 	}
 
 	void OnPlayerDisconnected(NetworkPlayer player)
 	{
+		string attack = connectedAddrs[player.ipAddress];
+
 		connectedAddrs.Remove(player.ipAddress);
+		unusedAttacks.Add(attack);
+		loadedAttacks.Remove(attack);
 	}
 
 	[RPC]
-	void RecvClientMessage(string msg)
+	void RecvClientEvent(string attack)
 	{
+		// Get an event from a client.
+		Debug.Log("Client attack! " + attack);
+	}
+
+	[RPC]
+	void AssignClientAttack(string attack)
+	{
+		// Empty. Implemented on the client.
 	}
 }
+

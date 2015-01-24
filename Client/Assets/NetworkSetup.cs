@@ -4,6 +4,7 @@ using System.Collections;
 public class NetworkSetup : MonoBehaviour {
 
     public string connectionIP;
+    public string sendText;
     public int connectionPort = 25001;
 
     void OnGUI()
@@ -21,7 +22,7 @@ public class NetworkSetup : MonoBehaviour {
         {
             string connectedIP = Network.player.externalIP;
             GUI.Label(new Rect(10, 10, 300, 20), "Status: Connected as Client");
-            GUI.Label(new Rect(10, 30, 300, 20), "External Address:" + connectionIP);
+			GUI.Label(new Rect(10, 30, 300, 20), "External Address:" + connectedIP);
             if (GUI.Button(new Rect(10, 50, 120, 20), "Disconnect"))
             {
                 Network.Disconnect(200);

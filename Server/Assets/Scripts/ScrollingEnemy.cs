@@ -10,12 +10,15 @@ public class ScrollingEnemy : Mobile {
 	
 	// Update is called once per frame
 	void Update () {
-
+		if (transform.position.x < -15.0f) {
+			GameObject.Find("GameController").GetComponent<GameController>().RemoveFromList(gameObject);
+			GameObject.Destroy(gameObject);
+		}
 	}
 
 	void OnCollisionEnter (Collision collision) {
 		if (collision.gameObject.tag == "Player") {
-			StartCoroutine(GameObject.Find("GameController").GetComponent<GameController>().DestroyPlayer());
+			GameObject.Find("GameController").GetComponent<GameController>().ClearField();
 		}
 	}
 }

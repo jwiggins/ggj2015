@@ -2,7 +2,8 @@
 using System.Collections;
 
 public abstract class Attack : Mobile {
-
+	
+	public GameObject deathPoof;
 	string _myName = "Attack Not Identified";
 	float _myReloadTime = 1.0f;
 	bool propertiesDeclared = false;
@@ -54,6 +55,9 @@ public abstract class Attack : Mobile {
 	protected virtual void OnCollisionEnter (Collision collision) {
 		if (collision.gameObject.tag == "Mobiles") {
 			GameObject.Find("GameController").GetComponent<GameController>().RemoveFromList(collision.gameObject);
+			if (deathPoof != null) {
+				Instantiate (deathPoof, collision.gameObject.transform.position, Quaternion.identity);
+			}
 			Destroy (collision.gameObject);
 		}
 	}

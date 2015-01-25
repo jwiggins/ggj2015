@@ -23,6 +23,7 @@ public class Ginger : Enemy {
 
 	protected override void OnCollisionEnter (Collision collision) {
 		if (collision.gameObject.tag == "Player") {
+			collision.gameObject.audio.PlayOneShot(collision.gameObject.audio.clip);
 			GameObject.Find("GameController").GetComponent<ClientCommunicator>().randomizeAllClients();
 			GameObject.Find("GameController").GetComponent<GameController>().RemoveFromList(this.gameObject);
 			Destroy (this.gameObject);

@@ -4,6 +4,8 @@ using System.Collections;
 public class Evade : Attack {
 
 	GameObject playerObject;
+	public Sprite duck;
+	Sprite playerOriginal;
 
 	public override void DeclareMyProperties () {
 		myName = "Evade";
@@ -33,9 +35,13 @@ public class Evade : Attack {
 		playerObject = GameObject.Find("GameController").GetComponent<GameController>().playerObject;
  		playerObject.tag = "Unhittable";
 		playerObject.layer = 13;
+		SpriteRenderer playerRenderer = playerObject.GetComponent<SpriteRenderer> ();
+		playerOriginal = playerRenderer.sprite;
+		playerObject.GetComponent<SpriteRenderer>().sprite = duck;
 		yield return new WaitForSeconds(3);
 		playerObject.tag = "Player";
 		playerObject.layer = 10;
+		playerObject.GetComponent<SpriteRenderer>().sprite = playerOriginal;
 		GameObject.Find("GameController").GetComponent<GameController>().RemoveFromList(this.gameObject);
 		Destroy (this.gameObject);
 	}

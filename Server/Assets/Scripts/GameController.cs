@@ -114,4 +114,9 @@ public class GameController : MonoBehaviour {
 			addToList (thisAttack);
 		}
 	}
+
+	public void oneUp () {
+		playerLives += 1;
+		livesText.text = playerLives.ToString ();
+	}
 }

@@ -27,8 +27,7 @@ public class Spawner : MonoBehaviour {
 		yield return new WaitForSeconds (1);
 		GameObject thisEnemy = determineSpawnChoice(Random.Range (0.0f, 1.0f));
 		if (thisEnemy != null && GameController.spawningIsEnabled) {
-			thisEnemy = (GameObject) GameObject.Instantiate(thisEnemy, 
-			                                    gameObject.transform.position, Quaternion.identity);
+			thisEnemy = (GameObject) Instantiate(thisEnemy, gameObject.transform.position, Quaternion.identity);
 			GameObject.Find("GameController").GetComponent<GameController>().addToList(thisEnemy);
 		}
 		waitingToSpawn = false;
@@ -46,6 +45,7 @@ public class Spawner : MonoBehaviour {
 	}
 
 	public void SetSpawnableEnemy (Enemy thisEnemy){
+		thisEnemy.InitializeEnemy ();
 		spawnables.Add (thisEnemy);
 
 		float maxChance = thisEnemy.spawnChance;

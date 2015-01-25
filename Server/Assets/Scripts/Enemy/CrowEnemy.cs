@@ -10,8 +10,11 @@ public class CrowEnemy : Enemy {
 	float speed = -3.0f;
 	float timingOffset = 0.0f;
 
+	public override void InitializeEnemy () {
+		spawnChance = 0.01f;
+	}
+
 	protected override void Awake () {
-		spawnChance = 0.05f;
 		availableSpawners = new List<int> {1,2,6,7};
 		base.Awake ();
 	}

@@ -9,6 +9,7 @@ public class ClientCommunicator : MonoBehaviour {
 	Dictionary<string, string> connectedAddrs;
 	List<string> unusedAttacks;
 	List<string> loadedAttacks;
+	List<NetworkPlayer> clients;
 
 	GameController controller;
 
@@ -20,6 +21,7 @@ public class ClientCommunicator : MonoBehaviour {
 		unusedAttacks = new List<string>();
 		loadedAttacks = new List<string>();
 
+		clients = new List<NetworkPlayer> ();
 	}
 
 	void Start () {
@@ -52,16 +54,10 @@ public class ClientCommunicator : MonoBehaviour {
 		}
 	}
 	
-	void OnPlayerConnected(NetworkPlayer player)
-	{
-		int index = (int) (Random.value * unusedAttacks.Count);
-		string attack = unusedAttacks[index];
-
-		loadedAttacks.Add(attack);
-		unusedAttacks.RemoveAt(index);
-		connectedAddrs.Add(player.ipAddress, attack);
-
-		networkView.RPC("AssignClientAttack", player, attack);
+	void OnPlayerConnected(NetworkPlayer player) {
+		string attack = assignRandomAbility (player);
+		clients.Add (player);
+		connectedAddrs.Add (player.ipAddress, attack);
 	}
 
 	void OnPlayerDisconnected(NetworkPlayer player)
@@ -71,6 +67,27 @@ public class ClientCommunicator : MonoBehaviour {
 		connectedAddrs.Remove(player.ipAddress);
 		unusedAttacks.Add(attack);
 		loadedAttacks.Remove(attack);
+	}
+
+	public void randomizeAllClients() {
+		foreach (string attack in loadedAttacks) {
+			unusedAttacks.Add(attack);
+			loadedAttacks.Remove(attack);
+		}
+		foreach (NetworkPlayer client in clients) {
+			assignRandomAbility(client);
+		}
+	}
+
+	string assignRandomAbility(NetworkPlayer player) {
+		int index = (int) (Random.value * unusedAttacks.Count);
+		string attack = unusedAttacks[index];
+		
+		loadedAttacks.Add(attack);
+		unusedAttacks.RemoveAt(index);
+
+		networkView.RPC("AssignClientAttack", player, attack);
+		return attack;
 	}
 
 	[RPC]

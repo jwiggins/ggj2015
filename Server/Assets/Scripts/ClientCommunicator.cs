@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ClientCommunicator : MonoBehaviour {
-	
+
+	public GUIStyle style;
+
 	public int connectionPort = 25001;
 
 	Dictionary<string, string> connectedAddrs;
@@ -39,6 +41,7 @@ public class ClientCommunicator : MonoBehaviour {
 
 	void OnGUI()
 	{
+		GUIStyle thisStyle = style;
 		if (Network.peerType == NetworkPeerType.Disconnected)
 		{
 			GUI.Label(new Rect(10, 10, 300, 20), "Status: Disconnected");
@@ -46,14 +49,14 @@ public class ClientCommunicator : MonoBehaviour {
 		else if (Network.peerType == NetworkPeerType.Server)
 		{
 			string ipAddr = Network.player.ipAddress;
-			GUI.Label(new Rect(10, 10, 300, 20), "Status: Connected as Server");
-			GUI.Label(new Rect(10, 30, 300, 20), ipAddr);
+			GUI.Label(new Rect(10, 10, 300, 20), "Status: Connected as Server", thisStyle);
+			GUI.Label(new Rect(10, 30, 300, 20), ipAddr, thisStyle);
 			string allClients = "Clients: ";
 			foreach (string playerIp in connectedAddrs.Keys)
 			{
-				allClients = allClients + playerIp;
+				allClients = allClients + playerIp + "\n";
 			}
-			GUI.Label(new Rect(10, 50, 300, 20), allClients);
+			GUI.Label(new Rect(10, 50, 300, 20), allClients, thisStyle);
 		}
 	}
 	

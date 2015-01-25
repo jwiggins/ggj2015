@@ -7,19 +7,25 @@ public class Communicator : MonoBehaviour {
     public int connectionPort = 25001;
 
 	string connectionIP = "";
+	bool canAttack = true;
 	string attackType;
+	float attackPause = 1.0f;
 	AudioSource attackSound;
-	Dictionary<string, AudioSource> sounds;
+	Dictionary<string, AudioSource> sources;
+	Dictionary<string, float> pauses;
 
 	void Start()
 	{
-		sounds = new Dictionary<string, AudioSource>();
-
-		foreach (Object res in  Resources.LoadAll ("Sounds")) {
+		sources = new Dictionary<string, AudioSource>();
+		pauses = new Dictionary<string, float>();
+		foreach (Object res in  Resources.LoadAll("Sounds")) {
 			GameObject soundPrefab = (GameObject) res;
+			
 			GameObject soundInstance = (GameObject) Instantiate(soundPrefab, transform.position, Quaternion.identity);
-			AudioSource sound = soundInstance.GetComponent<AudioSource>();
-			sounds.Add(soundPrefab.tag, sound);
+			AudioSource source = soundInstance.GetComponent<AudioSource>();
+			Sound sound = soundInstance.GetComponent<Sound>();
+			sources.Add(soundPrefab.tag, source);
+			pauses.Add(soundPrefab.tag, sound.pause);
 		}
 	}
 	
@@ -46,12 +52,18 @@ public class Communicator : MonoBehaviour {
 
 	public void Attack()
 	{
-		if (Network.peerType == NetworkPeerType.Client)
+		if (Network.peerType == NetworkPeerType.Client && canAttack)
 		{
 			Debug.Log("Invoking RecvClientEvent on the server.");
 			attackSound.PlayOneShot(attackSound.clip);
 			networkView.RPC("RecvClientEvent", RPCMode.Server, attackType);
+			canAttack = false;
 		}
+	}
+
+	IEnumerator WeaponDelay() {
+		yield return new WaitForSeconds(attackPause);
+		canAttack = true;
 	}
 
 	[RPC]
@@ -59,7 +71,8 @@ public class Communicator : MonoBehaviour {
 	{
 		attackType = attack;
 
-		attackSound = sounds[attack];
+		attackSound = sources[attack];
+		attackPause = pauses[attack];
 		Debug.Log("My attack is:" + attack);
 	}
 

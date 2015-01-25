@@ -30,7 +30,7 @@ public class Player : Mobile {
 	}
 
 	protected virtual void OnCollisionEnter (Collision collision) {
-		if (gameObject.tag == "Unhittable") {
+		if (gameObject.tag == "Unhittable" && collision.gameObject.tag != "Boundaries") {
 			Physics.IgnoreCollision(collision.gameObject.collider, gameObject.collider);
 		}
 	}

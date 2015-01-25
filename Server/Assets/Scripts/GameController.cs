@@ -7,7 +7,11 @@ public class GameController : MonoBehaviour {
 
 	int playerLives = 9;
 	bool playerExists;
-	GameObject playerObject;
+	GameObject _playerObject;
+	public GameObject playerObject {
+		get { return _playerObject; }
+		set { _playerObject = value; }
+	}
 	public GameObject playerPrefab;
 
 	public Text livesText;

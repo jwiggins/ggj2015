@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Broth : Attack {
 
@@ -11,6 +12,8 @@ public class Broth : Attack {
 	public Sprite topper;
 	public GameObject brothPrefab;
 
+	List<GameObject> thisTower;
+
 	public override void DeclareMyProperties () {
 		myName = "Broth";
 		myReloadTime = 6.0f;
@@ -18,7 +21,8 @@ public class Broth : Attack {
 	}
 
 	protected override void Awake () {
-
+		thisTower = new List<GameObject> ();
+		thisTower.Add (gameObject);
 	}
 
 	// Use this for initialization
@@ -37,33 +41,32 @@ public class Broth : Attack {
 		StartCoroutine (BrothSpawn());
 	}
 
-	public void connectBrothIndex (int index, Broth previous) {
+	public void connectBrothIndex (int index, Broth previous, List<GameObject> tower) {
 		myBrothIndex = index;
 		prev = previous;
 		transform.position = new Vector2 (prev.transform.position.x, prev.transform.position.y + 1f);
+		thisTower = tower;
 	}
 
 	public IEnumerator BrothSpawn () {
+		thisTower.Add (gameObject);
 		if (myBrothIndex == maxBroth) {
 			gameObject.GetComponent<SpriteRenderer>().sprite = topper;
-			yield return new WaitForSeconds(brothTime);
-			StartCoroutine(prev.BrothDestroy());
-			Destroy (gameObject);
+			yield return new WaitForSeconds(brothTime * 2);
+			KillMe ();
 		}
 		yield return new WaitForSeconds(brothTime);
-		next = ((GameObject) Instantiate(brothPrefab)).GetComponent<Broth>();
-		next.connectBrothIndex (myBrothIndex + 1, this);
+		GameObject tempObject = (GameObject) Instantiate (brothPrefab, 
+		                                                  new Vector3(transform.position.x, transform.position.y + 1f, 0),
+		                                                  Quaternion.identity);
+		next = tempObject.GetComponent<Broth>();
+		next.connectBrothIndex (myBrothIndex + 1, this, thisTower);
 		StartCoroutine (next.BrothSpawn());
-
 	}
 
-	public IEnumerator BrothDestroy () {
-		yield return new WaitForSeconds(brothTime);
-		if (myBrothIndex == 0) {
-			GameObject.Find("GameController").GetComponent<GameController>().RemoveFromList(gameObject);
-		} else {
-			StartCoroutine (prev.BrothDestroy ());
+	public void KillMe() {
+		foreach(GameObject broth in thisTower){
+			Destroy (broth);
 		}
-		Destroy (gameObject);
 	}
 }

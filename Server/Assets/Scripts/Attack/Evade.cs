@@ -30,7 +30,8 @@ public class Evade : Attack {
 	}
 
 	IEnumerator Invulnerability () {
-		playerObject.tag = "Unhittable";
+		playerObject = GameObject.Find("GameController").GetComponent<GameController>().playerObject;
+ 		playerObject.tag = "Unhittable";
 		playerObject.layer = 13;
 		yield return new WaitForSeconds(3);
 		playerObject.tag = "Player";

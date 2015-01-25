@@ -58,6 +58,7 @@ public class Communicator : MonoBehaviour {
 			attackSound.PlayOneShot(attackSound.clip);
 			networkView.RPC("RecvClientEvent", RPCMode.Server, attackType);
 			canAttack = false;
+			StartCoroutine("WeaponDelay");
 		}
 	}
 

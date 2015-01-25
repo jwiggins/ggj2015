@@ -5,7 +5,7 @@ public class ChopSound : Sound
 {
 	protected override void Awake()
 	{
-		pause = 0.3f;
+		pause = 1.0f;
 		base.Awake();
 	}
 }

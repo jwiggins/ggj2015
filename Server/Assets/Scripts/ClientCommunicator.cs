@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -10,18 +10,26 @@ public class ClientCommunicator : MonoBehaviour {
 	List<string> unusedAttacks;
 	List<string> loadedAttacks;
 
+	GameController controller;
+
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		Network.InitializeServer(32, connectionPort, false);
 
 		connectedAddrs = new Dictionary<string, string>();
 		unusedAttacks = new List<string>();
 		loadedAttacks = new List<string>();
 
-		unusedAttacks.Add("Fire");
-		unusedAttacks.Add("Wind");
-		unusedAttacks.Add("Water");
-		unusedAttacks.Add("Marmot");
+	}
+
+	void Start () {
+		foreach (Object i in  Resources.LoadAll ("Attack Prefabs")) {
+			GameObject attackPrefab = (GameObject) i;
+			Attack attack = attackPrefab.GetComponent<Attack>();
+			unusedAttacks.Add(attack.myName);
+		}
+		controller = gameObject.GetComponent<GameController> ();
+
 	}
 
 	void OnGUI()
@@ -46,7 +54,7 @@ public class ClientCommunicator : MonoBehaviour {
 	
 	void OnPlayerConnected(NetworkPlayer player)
 	{
-		int index = (int) Random.value * unusedAttacks.Count;
+		int index = (int) (Random.value * unusedAttacks.Count);
 		string attack = unusedAttacks[index];
 
 		loadedAttacks.Add(attack);
@@ -66,16 +74,15 @@ public class ClientCommunicator : MonoBehaviour {
 	}
 
 	[RPC]
-	void RecvClientEvent(string attack)
-	{
+	void RecvClientEvent(string attack) {
 		// Get an event from a client.
 		Debug.Log("Client attack! " + attack);
+
+		controller.procAttack (attack);
 	}
 
 	[RPC]
-	void AssignClientAttack(string attack)
-	{
+	void AssignClientAttack(string attack) {
 		// Empty. Implemented on the client.
 	}
 }
-

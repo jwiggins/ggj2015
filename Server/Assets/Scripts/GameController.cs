@@ -14,7 +14,7 @@ public class GameController : MonoBehaviour {
 	List<Spawner> spawners;
 	public GameObject spawnerPrefab;
 
-	//NetworkThingy networker;
+	ClientCommunicator cComm;
 
 	static bool _spawningIsEnabled = true;
 	public static bool spawningIsEnabled {
@@ -26,7 +26,7 @@ public class GameController : MonoBehaviour {
 
 	void Awake () {
 		allMobiles = new List<GameObject>();
-		//networker = gameObject.GetComponent<NetworkThingy>()
+		cComm = gameObject.GetComponent<ClientCommunicator> ();
 		playerObject = (GameObject) Instantiate(playerPrefab, new Vector3 (-7.5f, 4f), Quaternion.identity);
 		allMobiles.Add (playerObject);
 		spawners = new List<Spawner> ();
@@ -90,5 +90,13 @@ public class GameController : MonoBehaviour {
 
 	public void addToList (GameObject addObj) {
 		allMobiles.Add (addObj);
+	}
+
+	public void procAttack (string name) {
+		if (spawningIsEnabled){
+			GameObject thisAttack = (GameObject) Instantiate(Resources.Load ("Attack Prefabs/" + name),
+			                                                 playerObject.transform.position, Quaternion.identity);
+			addToList (thisAttack);
+		}
 	}
 }

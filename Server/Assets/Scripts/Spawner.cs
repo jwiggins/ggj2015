@@ -25,7 +25,6 @@ public class Spawner : MonoBehaviour {
 
 	IEnumerator SpawnChecker () {
 		yield return new WaitForSeconds (1);
-		float spawnRandom = Random.Range (0.0f, 1.0f);
 		GameObject thisEnemy = determineSpawnChoice(Random.Range (0.0f, 1.0f));
 		if (thisEnemy != null && GameController.spawningIsEnabled) {
 			thisEnemy = (GameObject) GameObject.Instantiate(thisEnemy, 
@@ -38,7 +37,7 @@ public class Spawner : MonoBehaviour {
 	GameObject determineSpawnChoice(float perc) {
 		int iterator = 0;
 		foreach (float i  in maxChances) {
-			if (perc < maxChances[iterator]) {
+			if (perc < i) {
 				return spawnables[iterator].gameObject;
 			}
 			iterator++;

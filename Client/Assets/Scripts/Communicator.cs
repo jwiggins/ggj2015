@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Communicator : MonoBehaviour {
 
     public int connectionPort = 25001;
+	bool doneTesting = false;
 
 	bool initialized = false;
 	bool canAttack = true;
@@ -14,9 +15,57 @@ public class Communicator : MonoBehaviour {
 	Dictionary<string, AudioSource> sources;
 	Dictionary<string, float> pauses;
 
+	void CheckNetwork()
+	{
+		ConnectionTesterStatus status = Network.TestConnection();
+		if (status == ConnectionTesterStatus.Undetermined)
+			return;
+
+		switch (status)
+		{
+		case ConnectionTesterStatus.Error:
+			Debug.Log("Network test: Error");
+			break;
+		case ConnectionTesterStatus.LimitedNATPunchthroughPortRestricted:
+			Debug.Log("Network test: LimitedNATPunchthroughPortRestricted");
+			break;
+		case ConnectionTesterStatus.LimitedNATPunchthroughSymmetric:
+			Debug.Log("Network test: LimitedNATPunchthroughSymmetric");
+			break;
+		case ConnectionTesterStatus.NATpunchthroughAddressRestrictedCone:
+			Debug.Log("Network test: NATpunchthroughAddressRestrictedCone");
+			break;
+		case ConnectionTesterStatus.NATpunchthroughFullCone:
+			Debug.Log("Network test: NATpunchthroughFullCone");
+			break;
+		case ConnectionTesterStatus.PublicIPIsConnectable:
+			Debug.Log("Network test: PublicIPIsConnectable");
+			break;
+		case ConnectionTesterStatus.PublicIPNoServerStarted:
+			Debug.Log("Network test: PublicIPNoServerStarted");
+			break;
+		case ConnectionTesterStatus.PublicIPPortBlocked:
+			Debug.Log("Network test: PublicIPPortBlocked");
+			break;
+		case ConnectionTesterStatus.Undetermined:
+			Debug.Log("Network test: Undetermined");
+			break;
+		}
+
+		doneTesting = true;
+	}
+
+
+	void Update()
+	{
+		if (!doneTesting)
+			CheckNetwork();
+	}
+
 	void Awake()
 	{
 		Debug.Log("Communicator awakening!");
+
 		Communicator maybeThis = GameObject.FindObjectOfType<Communicator>();
 
 		if (!maybeThis.initialized)

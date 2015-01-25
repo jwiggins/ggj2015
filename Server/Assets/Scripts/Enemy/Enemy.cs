@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public abstract class Enemy : Mobile {
 
 	protected List<int> availableSpawners = new List<int> {0,1,2,3,4,5,6,7,8};
-	float _spawnChance = 0.05f;
+	float _spawnChance = 0.2f;
 	public float spawnChance {
 		get { return _spawnChance; }
 		set { _spawnChance = value; }

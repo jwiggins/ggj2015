@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
@@ -8,6 +9,9 @@ public class GameController : MonoBehaviour {
 	bool playerExists;
 	GameObject playerObject;
 	public GameObject playerPrefab;
+
+	public Text livesText;
+	public GameObject deathImage;
 
 	List<Enemy> enemies = new List<Enemy> ();
 
@@ -51,7 +55,7 @@ public class GameController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+		livesText = GameObject.Find ("NineLivesGui").GetComponent<Text> ();
 	}
 	
 	// Update is called once per frame
@@ -64,13 +68,24 @@ public class GameController : MonoBehaviour {
 	}
 
 	IEnumerator DestroyPlayer(){
-		DestroyAllMobiles ();
-		playerLives -= 1;
-		spawningIsEnabled = false;
-		yield return new WaitForSeconds (2);
-		spawningIsEnabled = true;
-		playerObject = (GameObject) Instantiate(playerPrefab, new Vector3 (-7.5f, 0f), Quaternion.identity);
-		allMobiles.Add (playerObject);
+		if (spawningIsEnabled){
+			DestroyAllMobiles ();
+			playerLives -= 1;
+			livesText.text = playerLives.ToString ();
+			spawningIsEnabled = false;
+			if (playerLives > 0) {
+				yield return new WaitForSeconds (2);
+				spawningIsEnabled = true;
+ 				playerObject = (GameObject) Instantiate(playerPrefab, new Vector3 (-7.5f, 0f), Quaternion.identity);
+				allMobiles.Add (playerObject);
+			} else {
+				GameObject death = (GameObject)Instantiate (deathImage);
+				death.transform.SetParent (GameObject.Find ("Canvas").transform, false);
+				yield return new WaitForSeconds (5);
+				spawningIsEnabled = true;
+				Application.LoadLevel("OpeningScene");
+			}
+		}
 	}
 
 	void DestroyAllMobiles () {

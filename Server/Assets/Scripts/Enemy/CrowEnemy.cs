@@ -11,7 +11,7 @@ public class CrowEnemy : Enemy {
 	float timingOffset = 0.0f;
 
 	protected override void Awake () {
-		spawnChance = 0.3f;
+		spawnChance = 0.05f;
 		availableSpawners = new List<int> {1,2,6,7};
 		base.Awake ();
 	}

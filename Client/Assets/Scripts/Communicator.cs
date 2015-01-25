@@ -136,6 +136,7 @@ public class Communicator : MonoBehaviour {
 		attackType = attack;
 		attackPause = pause;
 		attackSound = sources[attackType];
+		canAttack = true;
 	}
 
 	[RPC]

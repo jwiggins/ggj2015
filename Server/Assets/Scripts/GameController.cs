@@ -18,6 +18,8 @@ public class GameController : MonoBehaviour {
 	public GameObject deathImage;
 
 	List<Enemy> enemies = new List<Enemy> ();
+	List<AudioSource> hitSounds = new List<AudioSource> ();
+	public AudioSource deathSound;
 
 	List<Spawner> spawners;
 	public GameObject spawnerPrefab;
@@ -55,6 +57,12 @@ public class GameController : MonoBehaviour {
 				}
 			}
 		}
+		foreach (Object res in  Resources.LoadAll("Hits")) {
+			GameObject soundPrefab = (GameObject) res;
+			GameObject soundInstance = (GameObject) Instantiate(soundPrefab, transform.position, Quaternion.identity);
+			AudioSource source = soundInstance.GetComponent<AudioSource>();
+			hitSounds.Add(source);
+		}
 	}
 
 	// Use this for initialization
@@ -68,6 +76,15 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void ClearField () {
+		if (playerLives > 1)
+		{
+			AudioSource randSound = hitSounds[Random.Range(0, hitSounds.Count)];
+			randSound.PlayOneShot(randSound.clip);
+		}
+		else
+		{
+			deathSound.PlayOneShot(deathSound.clip);
+		}
 		StartCoroutine (DestroyPlayer ());
 	}
 

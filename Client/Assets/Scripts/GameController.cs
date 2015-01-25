@@ -13,6 +13,14 @@ public class GameController : MonoBehaviour
 		communicator = GameObject.FindObjectOfType<Communicator>();
 	}
 
+	void OnGUI()
+	{
+		if (GUI.Button(new Rect(10, 10, 120, 50), "Reconnect"))
+		{
+			communicator.Reconnect();
+		}
+	}
+	
 	public void ButtonPushed()
 	{
 		communicator.Attack();

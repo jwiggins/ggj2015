@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class Communicator : MonoBehaviour {
 
     public int connectionPort = 25001;
+	public GameObject button;
+	public GameObject canvas;
 
 	string connectionIP = "";
 	bool canAttack = true;
@@ -60,12 +62,29 @@ public class Communicator : MonoBehaviour {
 			canAttack = false;
 			StartCoroutine("WeaponDelay");
 		}
+		_setRandomButtonPosition();
 	}
 
 	IEnumerator WeaponDelay() {
 		yield return new WaitForSeconds(attackPause);
 		canAttack = true;
 	}
+
+	void _setRandomButtonPosition()
+	{
+		RectTransform screenTransform = (RectTransform)canvas.transform;
+		RectTransform buttonTransform = (RectTransform)button.transform;
+		Rect screenRect = screenTransform.rect;
+		Rect buttonRect = buttonTransform.rect;
+		Vector3 buttonPos = buttonTransform.position;
+		float halfWidth = buttonRect.width / 2.0f;
+		float halfHeight = buttonRect.height / 2.0f;
+		float newX = Random.Range(halfWidth, screenRect.width - halfWidth);
+		float newY = Random.Range(halfHeight, screenRect.height - halfHeight);
+
+		button.transform.position = new Vector3(newX, newY, buttonPos.z);
+	}
+
 
 	[RPC]
 	void AssignClientAttack(string attack)

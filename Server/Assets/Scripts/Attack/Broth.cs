@@ -16,7 +16,7 @@ public class Broth : Attack {
 
 	public override void DeclareMyProperties () {
 		myName = "Broth";
-		myReloadTime = 6.0f;
+		myReloadTime = 3.0f;
 		base.DeclareMyProperties ();
 	}
 

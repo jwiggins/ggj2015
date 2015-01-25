@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Communicator : MonoBehaviour {
-
+	
     public int connectionPort = 25001;
+	string connectionAddress = "";
 	bool doneTesting = false;
 
 	bool initialized = false;
@@ -92,11 +93,27 @@ public class Communicator : MonoBehaviour {
 		}
 	}
 
+
+	public void Reconnect()
+	{
+		if (Network.peerType == NetworkPeerType.Disconnected)
+		{
+			Network.Connect(connectionAddress, connectionPort);
+		}
+		else if (Network.peerType == NetworkPeerType.Client)
+		{
+			Network.Disconnect(200);
+			Network.Connect(connectionAddress, connectionPort);
+		}
+	}
+
+
 	public void Connect(string address)
 	{
 		if (Network.peerType == NetworkPeerType.Disconnected)
 		{
 			Network.Connect(address, connectionPort);
+			connectionAddress = address;
 		}
 	}
 
@@ -119,6 +136,7 @@ public class Communicator : MonoBehaviour {
 	[RPC]
 	void AssignClientAttack(string attack)
 	{
+		Debug.Log("Got the " + attack + " attack from the server!");
 		attackType = attack;
 		attackSound = sources[attackType];
 		attackPause = pauses[attackType];

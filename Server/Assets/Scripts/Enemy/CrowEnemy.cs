@@ -11,7 +11,7 @@ public class CrowEnemy : Enemy {
 	float timingOffset = 0.0f;
 
 	public override void InitializeEnemy () {
-		spawnChance = 0.01f;
+		spawnChance = 0.04f;
 	}
 
 	protected override void Awake () {

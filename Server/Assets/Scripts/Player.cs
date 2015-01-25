@@ -28,4 +28,10 @@ public class Player : Mobile {
 		yield return new WaitForSeconds(1f);
 		canJump = true;
 	}
+
+	protected virtual void OnCollisionEnter (Collision collision) {
+		if (gameObject.tag == "Unhittable") {
+			Physics.IgnoreCollision(collision.gameObject.collider, gameObject.collider);
+		}
+	}
 }

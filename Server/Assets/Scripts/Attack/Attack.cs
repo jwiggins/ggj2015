@@ -46,4 +46,7 @@ public abstract class Attack : Mobile {
 			Destroy (collision.gameObject);
 		}
 	}
+
+	public virtual void Spawn () {
+		}
 }

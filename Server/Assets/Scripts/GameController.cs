@@ -111,6 +111,7 @@ public class GameController : MonoBehaviour {
 		if (spawningIsEnabled){
 			GameObject thisAttack = (GameObject) Instantiate(Resources.Load ("Attack Prefabs/" + name),
 			                                                 playerObject.transform.position, Quaternion.identity);
+			thisAttack.GetComponent<Attack>().Spawn();
 			addToList (thisAttack);
 		}
 	}

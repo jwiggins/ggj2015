@@ -9,7 +9,7 @@ public class Evade : Attack {
 
 	public override void DeclareMyProperties () {
 		myName = "Evade";
-		myReloadTime = 10.0f;
+		myReloadTime = 5.0f;
 		base.DeclareMyProperties ();
 	}
 	
@@ -38,7 +38,7 @@ public class Evade : Attack {
 		SpriteRenderer playerRenderer = playerObject.GetComponent<SpriteRenderer> ();
 		playerOriginal = playerRenderer.sprite;
 		playerObject.GetComponent<SpriteRenderer>().sprite = duck;
-		yield return new WaitForSeconds(3);
+		yield return new WaitForSeconds(2);
 		playerObject.tag = "Player";
 		playerObject.layer = 10;
 		playerObject.GetComponent<SpriteRenderer>().sprite = playerOriginal;

@@ -11,9 +11,10 @@ public class Broth : Attack {
 	public Sprite topper;
 	public GameObject brothPrefab;
 
-	public override void DeclareMyName () {
+	public override void DeclareMyProperties () {
 		myName = "Broth";
-		base.DeclareMyName ();
+		myReloadTime = 6.0f;
+		base.DeclareMyProperties ();
 	}
 
 	protected override void Awake () {

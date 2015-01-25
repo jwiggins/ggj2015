@@ -5,7 +5,7 @@ public class EvadeSound : Sound
 {
 	protected override void Awake()
 	{
-		pause = 5.0f;
+		pause = 10.0f;
 		base.Awake();
 	}
 }

@@ -9,6 +9,7 @@ public class ClientCommunicator : MonoBehaviour {
 	Dictionary<string, string> connectedAddrs;
 	List<string> unusedAttacks;
 	List<string> loadedAttacks;
+	Dictionary<string, float> attackPauses;
 	List<NetworkPlayer> clients;
 
 	GameController controller;
@@ -20,6 +21,7 @@ public class ClientCommunicator : MonoBehaviour {
 		connectedAddrs = new Dictionary<string, string>();
 		unusedAttacks = new List<string>();
 		loadedAttacks = new List<string>();
+		attackPauses = new Dictionary<string, float>();
 
 		clients = new List<NetworkPlayer> ();
 	}
@@ -29,6 +31,7 @@ public class ClientCommunicator : MonoBehaviour {
 			GameObject attackPrefab = (GameObject) i;
 			Attack attack = attackPrefab.GetComponent<Attack>();
 			unusedAttacks.Add(attack.myName);
+			attackPauses[attack.myName] = attack.myReloadTime;
 		}
 		controller = gameObject.GetComponent<GameController> ();
 
@@ -82,11 +85,12 @@ public class ClientCommunicator : MonoBehaviour {
 	string assignRandomAbility(NetworkPlayer player) {
 		int index = (int) (Random.value * unusedAttacks.Count);
 		string attack = unusedAttacks[index];
+		float pause = attackPauses[attack];
 		
 		loadedAttacks.Add(attack);
 		unusedAttacks.RemoveAt(index);
 
-		networkView.RPC("AssignClientAttack", player, attack);
+		networkView.RPC("AssignClientAttack", player, attack, pause);
 		return attack;
 	}
 
@@ -99,7 +103,7 @@ public class ClientCommunicator : MonoBehaviour {
 	}
 
 	[RPC]
-	void AssignClientAttack(string attack) {
+	void AssignClientAttack(string attack, float pause) {
 		// Empty. Implemented on the client.
 	}
 }

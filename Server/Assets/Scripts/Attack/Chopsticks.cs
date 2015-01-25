@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Chopsticks : Attack {
 
-	public override void DeclareMyName () {
+	public override void DeclareMyProperties () {
 		myName = "Chopsticks";
-		base.DeclareMyName ();
+		myReloadTime = 0.5f;
+		base.DeclareMyProperties ();
 	}
 
 	protected override void Awake () {

@@ -5,9 +5,10 @@ public class Evade : Attack {
 
 	GameObject playerObject;
 
-	public override void DeclareMyName () {
+	public override void DeclareMyProperties () {
 		myName = "Evade";
-		base.DeclareMyName ();
+		myReloadTime = 10.0f;
+		base.DeclareMyProperties ();
 	}
 	
 	protected override void Awake () {

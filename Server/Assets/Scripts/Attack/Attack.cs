@@ -4,19 +4,30 @@ using System.Collections;
 public abstract class Attack : Mobile {
 
 	string _myName = "Attack Not Identified";
-	bool nameDeclared = false;
+	float _myReloadTime = 1.0f;
+	bool propertiesDeclared = false;
 	public string myName {
 		get { 
-			if (!nameDeclared) {
-				DeclareMyName();
+			if (!propertiesDeclared) {
+				DeclareMyProperties();
 			}
 			return _myName;
 		}
 		set { _myName = value; }
 	}
 
-	public virtual void DeclareMyName () {
-		nameDeclared = true;
+	public float myReloadTime {
+		get { 
+			if (!propertiesDeclared) {
+				DeclareMyProperties();
+			}
+			return _myReloadTime;
+		}
+		set { _myReloadTime = value; }
+	}
+
+	public virtual void DeclareMyProperties () {
+		propertiesDeclared = true;
 	}
 
 	protected virtual void Awake () {

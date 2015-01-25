@@ -14,7 +14,6 @@ public class Communicator : MonoBehaviour {
 	float attackPause = 1.0f;
 	AudioSource attackSound;
 	Dictionary<string, AudioSource> sources;
-	Dictionary<string, float> pauses;
 
 	void CheckNetwork()
 	{
@@ -75,18 +74,15 @@ public class Communicator : MonoBehaviour {
 			DontDestroyOnLoad(gameObject);
 
 			sources = new Dictionary<string, AudioSource>();
-			pauses = new Dictionary<string, float>();
 
 			foreach (Object res in  Resources.LoadAll("Sounds")) {
 				GameObject soundPrefab = (GameObject) res;
 				
 				GameObject soundInstance = (GameObject) Instantiate(soundPrefab, transform.position, Quaternion.identity);
 				AudioSource source = soundInstance.GetComponent<AudioSource>();
-				Sound sound = soundInstance.GetComponent<Sound>();
 
 				DontDestroyOnLoad(source);
 				sources.Add(soundPrefab.tag, source);
-				pauses.Add(soundPrefab.tag, sound.pause);
 			}
 
 			initialized = true;
@@ -134,12 +130,12 @@ public class Communicator : MonoBehaviour {
 	}
 
 	[RPC]
-	void AssignClientAttack(string attack)
+	void AssignClientAttack(string attack, float pause)
 	{
 		Debug.Log("Got the " + attack + " attack from the server!");
 		attackType = attack;
+		attackPause = pause;
 		attackSound = sources[attackType];
-		attackPause = pauses[attackType];
 	}
 
 	[RPC]

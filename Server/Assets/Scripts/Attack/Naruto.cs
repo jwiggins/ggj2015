@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Naruto : Attack {
 
-	public override void DeclareMyName () {
+	public override void DeclareMyProperties () {
 		myName = "Narutomaki";
-		base.DeclareMyName ();
+		myReloadTime = 2.0f;
+		base.DeclareMyProperties ();
 	}
 	
 	// Use this for initialization

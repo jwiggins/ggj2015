@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Communicator : MonoBehaviour {
 
@@ -7,7 +8,21 @@ public class Communicator : MonoBehaviour {
 
 	string connectionIP = "";
 	string attackType;
+	AudioSource attackSound;
+	Dictionary<string, AudioSource> sounds;
 
+	void Start()
+	{
+		sounds = new Dictionary<string, AudioSource>();
+
+		foreach (Object res in  Resources.LoadAll ("Sounds")) {
+			GameObject soundPrefab = (GameObject) res;
+			GameObject soundInstance = (GameObject) Instantiate(soundPrefab, transform.position, Quaternion.identity);
+			AudioSource sound = soundInstance.GetComponent<AudioSource>();
+			sounds.Add(soundPrefab.tag, sound);
+		}
+	}
+	
     void OnGUI()
     {
         if (Network.peerType == NetworkPeerType.Disconnected)
@@ -26,17 +41,25 @@ public class Communicator : MonoBehaviour {
             {
                 Network.Disconnect(200);
             }
-			if (GUI.Button(new Rect(10, 90, 120, 50), "Attack!"))
-			{
-				networkView.RPC("RecvClientEvent", RPCMode.Server, attackType);
-			}
 		}
     }
+
+	public void Attack()
+	{
+		if (Network.peerType == NetworkPeerType.Client)
+		{
+			Debug.Log("Invoking RecvClientEvent on the server.");
+			attackSound.PlayOneShot(attackSound.clip);
+			networkView.RPC("RecvClientEvent", RPCMode.Server, attackType);
+		}
+	}
 
 	[RPC]
 	void AssignClientAttack(string attack)
 	{
 		attackType = attack;
+
+		attackSound = sounds[attack];
 		Debug.Log("My attack is:" + attack);
 	}
 

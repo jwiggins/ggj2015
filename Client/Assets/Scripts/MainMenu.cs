@@ -5,6 +5,7 @@ public class MainMenu : MonoBehaviour
 {
 	public Communicator communicator;
 	public UnityEngine.UI.Selectable textInput;
+	public UnityEngine.UI.Selectable startButton;
 
 	public void TextSubmitted()
 	{
@@ -28,8 +29,14 @@ public class MainMenu : MonoBehaviour
 		Application.Quit();
 	}
 
+	void Start()
+	{
+		startButton.interactable = false;
+	}
+
 	void Update()
 	{
 		textInput.enabled = (Network.peerType == NetworkPeerType.Disconnected);
+		startButton.interactable = (Network.peerType == NetworkPeerType.Client);
 	}
 }
